@@ -12,7 +12,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-public class HSExample {
+public class SchedulerEmulator {
 
 	public static class Map extends
 			Mapper<LongWritable, Text, Text, IntWritable> {
@@ -55,6 +55,22 @@ public class HSExample {
 		}
 	}
 
+	/**
+	 * A tool to emulate a job to allocating specified size of resource and specified time from Resource Manager.
+	 * It is based on the WordCount example.
+	 *
+	 * @param args
+	 * <input-path>: input directory just like wordcount example
+	 * <output-path>:output directory just like wordcount example
+	 * <map-mem> : the memery size of a map
+	 * <reduce-mem>: the memory size of a reduce
+	 * <map number>: number of map
+	 * <reduce number> :number of reduce
+	 * <map sleep> : time that each map should 'run'
+	 * <reduce-sleep> :time that each reduce should 'run'
+	 * <queue>: the queue of yarn that is used.
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception {
         if (args.length < 9) {
             System.out.println("Usage: args: <input-path> <output-path> <map-mem> <reduce-mem> <map number>" +
@@ -71,7 +87,7 @@ public class HSExample {
         conf.set("mapred.job.queue.name",args[8]);
 
 		Job job = new Job(conf, "wordcount");
-		job.setJarByClass(HSExample.class);
+		job.setJarByClass(SchedulerEmulator.class);
 
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
